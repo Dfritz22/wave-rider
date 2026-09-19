@@ -1,0 +1,1 @@
+"""wave-rider configuration package."""
