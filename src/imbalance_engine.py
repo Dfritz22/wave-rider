@@ -37,15 +37,15 @@ class ScoreResult:
     def to_record(self) -> dict:
         return {
             "timestamp": self.timestamp.isoformat(),
-            "close": round(self.close, 4),
+            "close": round(float(self.close), 4),
             "direction": self.direction,
-            "velocity_norm": round(self.velocity_norm, 3),
-            "range_norm": round(self.range_norm, 3),
-            "persistence": self.persistence,
-            "persistence_norm": round(self.persistence_norm, 3),
-            "volume_norm": round(self.volume_norm, 3),
-            "score": round(self.score, 3),
-            "triggered": self.triggered,
+            "velocity_norm": round(float(self.velocity_norm), 3),
+            "range_norm": round(float(self.range_norm), 3),
+            "persistence": int(self.persistence),
+            "persistence_norm": round(float(self.persistence_norm), 3),
+            "volume_norm": round(float(self.volume_norm), 3),
+            "score": round(float(self.score), 3),
+            "triggered": bool(self.triggered),
         }
 
 
