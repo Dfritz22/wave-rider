@@ -5,7 +5,6 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=wave-rider
 WorkingDirectory=/opt/wave-rider
 EnvironmentFile=/opt/wave-rider/.env
 ExecStart=/opt/wave-rider/.venv/bin/python -u main.py
