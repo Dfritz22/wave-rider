@@ -10,8 +10,13 @@ import os
 from datetime import time
 from zoneinfo import ZoneInfo
 
+from config import calibration as _calibration
+
 # --- Timezone ---
 MARKET_TZ = ZoneInfo("America/New_York")
+
+# --- Calibration knobs (editable JSON; see config/calibration.py) ---
+_CAL = _calibration.load()
 
 # --- Secrets / environment (loaded from .env on the droplet) ---
 ALPACA_API_KEY = os.getenv("ALPACA_API_KEY", "")
@@ -23,7 +28,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
 # --- Instrument ---
-SYMBOL = "SPY"
+SYMBOL = _CAL["symbol"]
 
 # --- Run mode: "observe" (log only) or "alert" (log + Telegram) ---
 MODE = os.getenv("WAVE_RIDER_MODE", "observe").strip().lower()
@@ -31,26 +36,26 @@ MODE = os.getenv("WAVE_RIDER_MODE", "observe").strip().lower()
 # --- Session windows (ET) ---
 MARKET_OPEN = time(9, 30)
 MARKET_CLOSE = time(16, 0)
-ACTIVE_WINDOW_START = time(15, 45)
-ACTIVE_WINDOW_END = time(16, 0)
+ACTIVE_WINDOW_START = _calibration.as_time(_CAL["active_window_start"])
+ACTIVE_WINDOW_END = _calibration.as_time(_CAL["active_window_end"])
 # Baseline "normal minute" is computed from bars in [BASELINE_START, window start).
-BASELINE_START = time(10, 0)
+BASELINE_START = _calibration.as_time(_CAL["baseline_start"])
 
-# --- Detector weights & thresholds (provisional; calibrate from Phase 0) ---
-VELOCITY_WEIGHT = 0.5
-RANGE_WEIGHT = 0.2
-PERSISTENCE_WEIGHT = 0.2
-VOLUME_WEIGHT = 0.1
+# --- Detector weights & thresholds (calibrate via config/calibration.json) ---
+VELOCITY_WEIGHT = _CAL["velocity_weight"]
+RANGE_WEIGHT = _CAL["range_weight"]
+PERSISTENCE_WEIGHT = _CAL["persistence_weight"]
+VOLUME_WEIGHT = _CAL["volume_weight"]
 
-PERSISTENCE_CAP = 3          # bars; caps the persistence component
-TRIGGER_SCORE = 3.0          # TBD after Phase 0 observation
-ALERT_COOLDOWN_MIN = 5       # minutes between alerts (one event => one alert)
-ONE_ALERT_PER_SESSION = False
+PERSISTENCE_CAP = _CAL["persistence_cap"]      # bars; caps the persistence component
+TRIGGER_SCORE = _CAL["trigger_score"]          # minute score that fires an alert
+ALERT_COOLDOWN_MIN = _CAL["alert_cooldown_min"]  # minutes between alerts
+ONE_ALERT_PER_SESSION = _CAL["one_alert_per_session"]
 
 # --- Floors to avoid divide-by-zero on flat baselines (dollars / shares) ---
-MIN_BASELINE_MOVE = 0.02
-MIN_BASELINE_RANGE = 0.03
-MIN_BASELINE_VOLUME = 1.0
+MIN_BASELINE_MOVE = _CAL["min_baseline_move"]
+MIN_BASELINE_RANGE = _CAL["min_baseline_range"]
+MIN_BASELINE_VOLUME = _CAL["min_baseline_volume"]
 
 # --- Loop timing (seconds) ---
 POLL_INTERVAL_SEC = 15       # how often to check for a newly closed bar

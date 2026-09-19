@@ -1,0 +1,17 @@
+{
+  "symbol": "SPY",
+  "active_window_start": "15:45",
+  "active_window_end": "16:00",
+  "baseline_start": "10:00",
+  "velocity_weight": 0.5,
+  "range_weight": 0.2,
+  "persistence_weight": 0.2,
+  "volume_weight": 0.1,
+  "persistence_cap": 3,
+  "trigger_score": 3.0,
+  "alert_cooldown_min": 5,
+  "one_alert_per_session": false,
+  "min_baseline_move": 0.02,
+  "min_baseline_range": 0.03,
+  "min_baseline_volume": 1.0
+}
